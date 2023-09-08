@@ -1,0 +1,29 @@
+total 68
+lrwxrwxrwx   1 root root     7 Jun 12 21:13 bin -> usr/bin
+lrwxrwxrwx   1 root root     8 Jun 12 21:13 sbin -> usr/sbin
+lrwxrwxrwx   1 root root     7 Jun 12 21:13 lib -> usr/lib
+lrwxrwxrwx   1 root root     9 Jun 12 21:13 lib32 -> usr/lib32
+lrwxrwxrwx   1 root root     9 Jun 12 21:13 lib64 -> usr/lib64
+lrwxrwxrwx   1 root root    10 Jun 12 21:13 libx32 -> usr/libx32
+drwxr-xr-x   2 root root  4096 Jun 12 21:13 mnt
+drwxr-xr-x   2 root root  4096 Jun 12 21:13 srv
+drwxr-xr-x   2 root root  4096 Jun 12 21:13 media
+drwxr-xr-x  11 root root  4096 Jun 12 21:13 var
+drwxr-xr-x  14 root root  4096 Jun 12 21:13 usr
+drwx------   2 root root 16384 Jun 12 21:15 lost+found
+lrwxrwxrwx   1 root root    28 Aug 31 13:44 vmlinuz.old -> boot/vmlinuz-5.10.0-25-amd64
+lrwxrwxrwx   1 root root    27 Aug 31 13:44 vmlinuz -> boot/vmlinuz-6.1.0-11-amd64
+lrwxrwxrwx   1 root root    31 Aug 31 13:44 initrd.img.old -> boot/initrd.img-5.10.0-25-amd64
+lrwxrwxrwx   1 root root    30 Aug 31 13:44 initrd.img -> boot/initrd.img-6.1.0-11-amd64
+drwxr-xr-x   3 root root  4096 Aug 31 13:46 boot
+drwx------   4 root root  4096 Aug 31 13:46 root
+dr-xr-xr-x  13 root root     0 Aug 31 13:46 sys
+dr-xr-xr-x 139 root root     0 Aug 31 13:46 proc
+drwxr-xr-x  18 root root  4096 Aug 31 13:46 ..
+drwxr-xr-x  18 root root  4096 Aug 31 13:46 .
+drwxr-xr-x  17 root root  3200 Aug 31 13:46 dev
+drwxr-xr-x   3 root root  4096 Aug 31 13:50 opt
+drwxrwxrwt   8 root root  4096 Sep  7 04:54 tmp
+drwxr-xr-x   4 root root  4096 Sep  7 23:00 home
+drwxr-xr-x  79 root root  4096 Sep  7 23:02 etc
+drwxr-xr-x  22 root root   740 Sep  7 23:02 run

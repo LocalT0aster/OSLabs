@@ -1,0 +1,5 @@
+x86_64-linux-gnu-gcc-ranlib-12
+x86_64-linux-gnu-gcc-ranlib
+x86_64-linux-gnu-gcc-nm-12
+x86_64-linux-gnu-gcc-nm
+x86_64-linux-gnu-gcc-ar-12

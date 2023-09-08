@@ -1,0 +1,10 @@
+total 36
+-rw-r--r-- 1 t0aster t0aster  807 Mar 27  2022 .profile
+-rw-r--r-- 1 t0aster t0aster 3526 Mar 27  2022 .bashrc
+-rw-r--r-- 1 t0aster t0aster  220 Mar 27  2022 .bash_logout
+drwxr-xr-x 4 root    root    4096 Sep  7 23:00 ..
+drwxr-xr-x 3 t0aster t0aster 4096 Sep  7 23:15 .local
+drwxr-xr-x 2 t0aster t0aster 4096 Sep  7 23:20 root
+drwxr-xr-x 2 t0aster t0aster 4096 Sep  7 23:20 home
+-rwxr-xr-x 1 t0aster t0aster  269 Sep  7 23:36 ex3.sh
+drwxr-xr-x 5 t0aster t0aster 4096 Sep  7 23:36 .

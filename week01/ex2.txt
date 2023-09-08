@@ -1,0 +1,16 @@
+   1  sudo apt-get install sl cowsay fortune lolcat
+   2  cowsay Hello World!
+   3  cowsay Hello World! | lolcat
+   4  fortune | cowsay | lolcat
+   5  sl | lolcat
+   6  sudo nano /usr/share/cowsay/cows/boykisser.cow
+   7  fortune | cowsay -f boykisser | lolcat
+   8  sudo touch /usr/share/games/fortunes/boykisser_quotes
+   9  code /usr/share/games/fortunes/boykisser_quotes
+  10  cd /usr/share/games/fortunes
+  11  sudo strfile boykisser_quotes
+  12  fortune boykisser_quotes | cowsay -f boykisser | lolcat
+  13  cd ~
+  14  echo "fortune | cowsay -f boykisser | lolcat" >> .bashrc
+  15  cd ~/Repos/OSLabs/week01
+  16  history > ex2.txt
