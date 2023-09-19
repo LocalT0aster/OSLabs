@@ -1,0 +1,4 @@
+#!/bin/bash
+gcc -O3 ex5.c -o ex5
+./ex5
+rm ex5
