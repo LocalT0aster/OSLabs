@@ -45,11 +45,13 @@ void quicksort(T* arr, size_t size) {
 
 int main() {
     T arr[] = {10, 7, 8, 9, 1, 5};
-    int n = sizeof(arr) / sizeof(arr[0]);
+    size_t n = sizeof(arr) / sizeof(arr[0]);
     quicksort(arr, n);
-    printf("Sorted array: \n");
+    printf("Sorted array:\n");
     for (int i = 0; i < n; i++) {
-        printf("%d ", arr[i]);
+        if (i == 0) printf("%d", arr[i]);
+        else printf(" %d", arr[i]);
     }
+    printf("\n");
     return 0;
 }
