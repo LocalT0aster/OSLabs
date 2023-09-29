@@ -1,0 +1,9 @@
+When the program is run with n=3:
+- After the 1st fork, there are 2 processes.
+- After the 2nd fork, each of the 2 processes fork, making it 4.
+- After the 3rd fork, each of the 4 processes fork, making it 8.
+
+When the program is run with n=5:
+- After 5 forks, the total number of processes is 2^5 = 32.
+
+The exponential growth is caused by each existing process forking, doubling the number of processes with each call.
