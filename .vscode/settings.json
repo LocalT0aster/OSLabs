@@ -3,6 +3,7 @@
         "float.h": "c",
         "stdio.h": "c",
         "unistd.h": "c",
-        "semaphore.h": "c"
+        "semaphore.h": "c",
+        "types.h": "c"
     }
 }
