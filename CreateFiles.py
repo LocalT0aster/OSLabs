@@ -1,14 +1,14 @@
 import os
 import stat
 
-week = 4
+week = 5
 basepath = f'week{str(0) + str(week) if week < 10 else str(week)}/'
 try:
     os.mkdir(basepath)
 except FileExistsError:
     print('Folder already exists!')
 
-for i in range(1,5):
+for i in range(1,8):
     try:
         with open(f'{basepath}ex{i}.c', 'x') as f:
             f.write(open('week01/main.c').read())
