@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     if (argc != 2) {
         fprintf(stderr, "Usage: %s <number of forks>\n", argv[0]);
         exit(1);
@@ -14,8 +14,5 @@ int main(int argc, char *argv[]) {
         fork();
         sleep(5);
     }
-    // This sleep call is 1s before pstree and 3s before file removal
-    sleep(2);
-
     return 0;
 }
