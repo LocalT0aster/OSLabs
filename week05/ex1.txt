@@ -1,0 +1,13 @@
+Inter-Process Communication (IPC) in Linux can be achieved through various mechanisms. This exercise delved into two specific forms: unnamed pipes and named pipes (FIFOs).
+
+1. **Unnamed Pipes**:
+   - **Purpose**: Unnamed pipes are primarily used for communication between a parent process and its child processes.
+   - **Usage in the Exercise**: The publisher utilized unnamed pipes to communicate with its child processes. For each subscriber, there was one corresponding child process of the publisher. When a message was input into the publisher, it was propagated to all child processes simultaneously using separate pipes for each.
+   - **Limitations**: Unnamed pipes are ephemeral and only exist as long as the processes using them are alive. They are also limited to communication within the same application or between a parent and its children. For broader IPC, named pipes or other methods might be more suitable.
+
+2. **Named Pipes (FIFOs)**:
+   - **Purpose**: Named pipes allow communication between unrelated processes and even between different applications. They exist in the file system, making them more persistent and versatile than unnamed pipes.
+   - **Usage in the Exercise**: Each child process of the publisher communicated with a subscriber using named pipes. The named pipes served as channels for messages to flow from the child processes to the subscribers. As the child processes acted as intermediaries, there was a clear separation and isolation between the publisher and the subscribers.
+   - **Benefits**: Using named pipes ensured that every subscriber had its dedicated communication channel. This architecture avoids potential race conditions that could arise if multiple subscribers were to read from a single named pipe.
+   
+In conclusion, this exercise showcased the power and flexibility of pipes in Linux. While unnamed pipes are efficient for parent-child communication, named pipes offer broader IPC capabilities. The combination of both in this exercise allowed for a structured and efficient message distribution system, highlighting the importance of choosing the right IPC mechanism based on the communication requirements.
