@@ -38,8 +38,8 @@ int main(int argc, char *argv[]) {
             exit(EXIT_FAILURE);
         }
 
-        if (pid == 0) {  // child process
-            close(pipes[i][1]);  // close unused write end
+        if (pid == 0) {  // Child process
+            close(pipes[i][1]);  // Close unused write end
 
             snprintf(path, sizeof(path), "%s%d", BASE_PATH, i+1);
             mkfifo(path, 0666);
