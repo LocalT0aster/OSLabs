@@ -1,4 +1,4 @@
 #!/bin/bash
-gcc -O3 ex5.c -o ex5
-./ex5
-rm ex5
+gcc -O3 ex5.c -o ex5.exe
+./ex5.exe
+rm ex5.exe

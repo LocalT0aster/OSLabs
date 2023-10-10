@@ -1,4 +1,4 @@
 #!/bin/bash
-gcc ex3.c -o ex3 -lm -lpthread -lrt
-./ex3
-rm ex3
+gcc ex3.c -o ex3.exe -lm -Wextra -Wpedantic
+./ex3.exe
+rm ex3.exe

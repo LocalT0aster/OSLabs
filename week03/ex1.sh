@@ -1,4 +1,4 @@
 #!/bin/bash
-gcc ex1.c -o ex1 -lm
-./ex1
-rm ex1
+gcc ex1.c -o ex1.exe -lm
+./ex1.exe
+rm ex1.exe

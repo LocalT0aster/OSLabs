@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Compile the C program
-gcc ex3.c -o ex3 -lm
+gcc ex3.c -o ex3.exe -lm
 
 # Run the program with n=3 in the background
 ./ex3 3 &
@@ -20,4 +20,4 @@ pstree | grep ex3
 
 # Wait for all processes to finish
 sleep 5
-rm ex3
+rm ex3.exe

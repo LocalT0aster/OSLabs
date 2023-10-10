@@ -1,4 +1,4 @@
 #!/bin/bash
-gcc ex4.c -o ex4 -lm
-./ex4
-rm ex4
+gcc ex4.c -o ex4.exe -lm
+./ex4.exe
+rm ex4.exe
