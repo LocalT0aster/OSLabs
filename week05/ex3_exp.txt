@@ -1,0 +1,5 @@
+The execution time of the program varies based on the number of threads (`m`). Generally, multi-threading provides speedup since multiple threads work in parallel, but this benefit is often countered by the overhead of creating, managing, and joining threads. Thus, there's an optimal number of threads for a given problem size and system, beyond which performance might degrade.
+
+For very high values of `m` relative to the problem size (`n`), the overhead might dominate the benefit of parallelism, causing the program to run slower. For very low values of `m`, the parallelism might be underutilized.
+
+One should note that the results are influenced by the architecture of the machine, and the exact optimal number of threads may vary from one system to another.

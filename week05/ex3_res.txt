@@ -1,0 +1,21 @@
+Timing results:
+
+real	0m0.819s
+user	0m0.819s
+sys	0m0.000s
+
+real	0m0.515s
+user	0m0.831s
+sys	0m0.000s
+
+real	0m0.288s
+user	0m0.858s
+sys	0m0.004s
+
+real	0m0.297s
+user	0m1.287s
+sys	0m0.016s
+
+real	0m0.216s
+user	0m1.407s
+sys	0m0.016s
