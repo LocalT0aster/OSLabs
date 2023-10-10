@@ -24,7 +24,7 @@ int main() {
     }
 
     // Initialize the semaphore in shared memory with pshared set to 1
-    if (sem_init(semaphore, 1, 1) == -1) {
+    if (sem_init(semaphore, 1, 0) == -1) {
         perror("sem_init");
         exit(1);
     }
