@@ -15,7 +15,7 @@ sleep 1  # wait for a while to ensure publisher sets up pipes
 
 for ((i=1; i<=$n; i++))
 do
-   x-terminal-emulator -e "./subscriber.exe $i" &
+    x-terminal-emulator -e "./subscriber.exe $i" &
 done
 
 wait
