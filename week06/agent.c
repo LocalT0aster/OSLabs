@@ -8,7 +8,7 @@
 
 void sig_handler(int signo) {
     if (signo == SIGUSR1) {
-        FILE *file = fopen("text.txt", "r");
+        FILE* file = fopen("text.txt", "r");
         if (file) {
             char line[BUF_SIZE];
             printf("\n");
@@ -27,7 +27,7 @@ void sig_handler(int signo) {
 
 int main() {
     setvbuf(stdout, NULL, _IONBF, 0);
-    FILE *pid_file = fopen("/var/run/agent.pid", "w");
+    FILE* pid_file = fopen("/var/run/agent.pid", "w");
     if (!pid_file) {
         perror("Failed to open /var/run/agent.pid for writing");
         return 1;
