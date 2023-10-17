@@ -1,0 +1,5 @@
+1. Changing the macro TRI_BASE:
+By setting the TRI_BASE macro to a smaller value like 100, the big_n() function in worker.c will complete its execution much faster. This is because the while-loop inside this function will have fewer iterations, leading to shorter burst times for processes. As a result, processes will likely finish their tasks more quickly, resulting in faster turnaround and completion times. This change will make the scheduler seem more responsive as it goes through processes faster.
+
+2. Setting all processes' arrival time to zero:
+When all processes have an arrival time of zero and the scheduling algorithm is First-Come-First-Serve (FCFS), processes will execute in the order they were introduced to the system. Essentially, the first process to be created or initialized will run first, followed by the second, and so on. FCFS only considers the arrival order for scheduling and does not prioritize based on other parameters like burst time.
