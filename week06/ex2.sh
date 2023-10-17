@@ -1,4 +1,6 @@
 #!/bin/bash
-gcc ex2.c -o ex2.exe -lm -Wextra -Wpedantic
-./ex2.exe
-rm ex2.exe
+gcc scheduler.c -o scheduler.exe -lm -Wextra -Wpedantic
+gcc worker.c -o worker.exe -lm
+./scheduler.exe data.txt
+rm scheduler.exe
+rm worker.exe
