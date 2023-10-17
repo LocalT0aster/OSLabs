@@ -1,5 +1,6 @@
 // ex2
 #define _GNU_SOURCE
+// #define FILE_OUTPUT
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,6 +10,8 @@
 #include <sys/wait.h>
 #include <sys/time.h>
 #define PS_MAX 10
+
+int console_stdout; // holds console stdout
 
 // holds the scheduling data of one process
 typedef struct {
@@ -121,6 +124,7 @@ ProcessData find_next_process() {
     // then we recursively call this function after incrementing total_time
     if (data[location].at > total_time) {
         printf("Scheduler: Runtime: %u seconds.\nProcess %d: has not arrived yet.\n", total_time, location);
+        fflush(stdout);
         total_time++;
         return find_next_process();
     }
@@ -136,7 +140,7 @@ void report() {
     int sum_wt = 0;
     int sum_tat = 0;
     for (int i = 0; i < data_size; i++) {
-        printf("process %d: \n", i);
+        printf("process %d:\n", i);
         printf("\tat=%d\n", data[i].at);
         printf("\tbt=%d\n", data[i].bt);
         printf("\tct=%d\n", data[i].ct);
@@ -153,6 +157,7 @@ void report() {
     printf("Average results for this run:\n");
     printf("\tavg_wt=%f\n", avg_wt);
     printf("\tavg_tat=%f\n", avg_tat);
+    fflush(stdout);
 }
 
 void check_burst() {
@@ -163,7 +168,17 @@ void check_burst() {
     // report simulation results
     report();
 
-    // terminate the scheduler :)
+#ifdef FILE_OUTPUT
+    fflush(stdout);
+    fclose(stdout);
+    if (dup2(console_stdout, STDOUT_FILENO) == -1) {
+        perror("Failed to restore stdout");
+        exit(1);
+    }
+    close(console_stdout);
+#endif
+
+    // kill the scheduler >:)
     exit(0);
 }
 
@@ -179,10 +194,12 @@ void schedule_handler(int signum) {
 
         printf("Scheduler: Runtime: %u seconds\n", total_time);
         printf("Process %d is running with %d seconds left\n", running_process, data[running_process].burst);
+        fflush(stdout);
 
         // 1.A. If the worker process finished its burst time
         if (data[running_process].burst <= 0) {
             printf("Scheduler: Terminating Process %d (Remaining Time: %d)\n", running_process, data[running_process].burst);
+            fflush(stdout);
 
             // terminate the running process
             terminate(ps[running_process]);
@@ -210,6 +227,7 @@ void schedule_handler(int signum) {
         // 3.A. If the current process is running
         if (running_process != -1) {
             printf("Scheduler: Stopping Process %d (Remaining Time: %d)\n", running_process, data[running_process].burst);
+            fflush(stdout);
 
             // stop the current running process
             suspend(ps[running_process]);
@@ -222,6 +240,7 @@ void schedule_handler(int signum) {
         if (ps[running_process] == 0) {
             // 3.C.1. then create a new process for {running_process}
             printf("Scheduler: Starting Process %d (Remaining Time: %d)\n", running_process, data[running_process].burst);
+            fflush(stdout);
 
             // Here we have the first response to the process {running_process}
             data[running_process].rt = total_time - data[running_process].at;
@@ -230,6 +249,7 @@ void schedule_handler(int signum) {
         } else {
             // 3.C.2. or resume the process {running_process}
             printf("Scheduler: Resuming Process %d (Remaining Time: %d)\n", running_process, data[running_process].burst);
+            fflush(stdout);
 
             resume(ps[running_process]);
         }
@@ -237,10 +257,23 @@ void schedule_handler(int signum) {
 }
 
 int main(int argc, char* argv[]) {
+#ifdef FILE_OUTPUT
+    console_stdout = dup(STDOUT_FILENO);
+    if (console_stdout == -1) {
+        perror("Failed to duplicate stdout");
+        return 1;
+    }
+    FILE* fp = freopen("scheduler.log", "a", stdout);
+    if (!fp) {
+        perror("Failed to redirect stdout to file");
+        return 1;
+    }
+#endif
+
     // read the data file
     FILE* in_file = fopen(argv[1], "r");
     if (in_file == NULL) {
-        printf("File is not found or cannot open it!\n");
+        perror("File is not found or cannot open it!\n");
         exit(1);
     } else {
         read_file(in_file);

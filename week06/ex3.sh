@@ -1,4 +1,7 @@
 #!/bin/bash
-gcc ex3.c -o ex3.exe -lm -Wextra -Wpedantic
-./ex3.exe
-rm ex3.exe
+gcc scheduler_sjf.c -o scheduler.exe -lm -Wextra -Wpedantic
+gcc worker.c -o worker.exe -lm
+./scheduler.exe data.txt
+rm scheduler.log
+rm scheduler.exe
+rm worker.exe
