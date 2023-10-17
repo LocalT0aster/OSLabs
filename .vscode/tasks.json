@@ -37,6 +37,15 @@
                 "kind": "build",
                 "isDefault": true
             }
+        },
+        {
+            "label": "Create shell scripts for current week",
+            "type": "shell",
+            "command": "python3 CreateBash.py",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
         }
     ],
     "version": "2.0.0"
