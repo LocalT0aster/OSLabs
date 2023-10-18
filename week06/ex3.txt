@@ -1,0 +1,7 @@
+Comparison between FCFS and SJF (non-preemptive):
+
+1. FCFS (First Come First Serve) schedules processes in the order of their arrival. It does not prioritize based on burst time.
+2. SJF (Shortest Job First) schedules processes based on burst time, giving priority to the process with the shortest burst time.
+3. SJF typically provides better average waiting time than FCFS as shorter processes get executed first.
+4. In the given implementation, SJF is non-preemptive, meaning once a process starts its execution, it runs until completion.
+5. While FCFS is simple and straightforward, SJF requires knowledge of the burst time of all processes.
