@@ -57,4 +57,9 @@ dkms.conf
 # VSCode directory
 # .vscode/
 
+# Ignore hidden .c files
 .*.c
+# Ignore hidden .py files in week* folders
+week*/.*.py
+
+week07/text.txt

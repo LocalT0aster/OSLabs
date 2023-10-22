@@ -1,5 +1,8 @@
 # Introduction to Operating Systems Lab Exercises
 
+> **Important**
+> Beware programmer! Don't deploy on Friday! Your family needs you!
+
 ## TOC
 
 - [Introduction to Operating Systems Lab Exercises](#introduction-to-operating-systems-lab-exercises)
