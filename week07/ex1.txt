@@ -1,0 +1,22 @@
+Performance Analysis:
+
+The performance of the three algorithms (First Fit, Best Fit, and Worst Fit) depends on the sequence and nature of allocation and deallocation requests. Generally:
+
+1. First Fit:
+   - Fast in finding the first available block.
+   - Can lead to memory fragmentation over time, especially with a lot of allocate and clear operations.
+   - Typically has a moderate performance.
+
+2. Best Fit:
+   - Tends to leave the smallest leftover memory blocks.
+   - Can be slower because it searches the entire list to find the best fit.
+   - Good for memory utilization but can suffer in terms of speed, especially with a large number of blocks.
+
+3. Worst Fit:
+   - Leaves larger leftover memory blocks, potentially reducing fragmentation.
+   - Like Best Fit, it can be slower because it searches the entire list.
+   - May lead to larger leftover blocks, but this does not always translate to better performance.
+
+In the provided sample, First Fit might perform better in terms of speed because it stops searching as soon as it finds a fitting block. Best Fit and Worst Fit, on the other hand, scan the entire memory each time.
+
+It's essential to understand the nature of allocation and deallocation requests and the requirements for speed and memory efficiency to choose the most suitable algorithm.

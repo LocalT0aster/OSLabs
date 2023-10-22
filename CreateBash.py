@@ -15,7 +15,7 @@ for i in range(1,n):
     try:
         shname = f'{basepath}ex{i}.sh'
         with open(shname, 'x')as f:
-            f.write(f'#!/bin/bash\ngcc ex{i}.c -o ex{i}.exe -lm -Wextra -Wpedantic\n./ex{i}.exe\nrm ex{i}.exe\n')
+            f.write(f'#!/bin/bash\ngcc ex{i}.c -o ex{i}.out -lm -Wextra -Wpedantic\n./ex{i}.out\nrm ex{i}.out\n')
             f.flush()
             f.close()
         os.chmod(shname, stat.S_IMODE(os.stat(shname).st_mode | stat.S_IEXEC))

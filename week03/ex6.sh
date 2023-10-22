@@ -1,4 +1,4 @@
 #!/bin/bash
-gcc -O3 ex6.c -o ex6.exe -lm
-./ex6.exe
-rm ex6.exe
+gcc -O3 ex6.c -o ex6.out -lm
+./ex6.out
+rm ex6.out

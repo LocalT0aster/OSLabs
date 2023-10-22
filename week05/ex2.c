@@ -21,7 +21,7 @@ void *print_message(void *ptr) {
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {
-        printf("Usage: ./ex2.exe <number of threads>\n");
+        printf("Usage: ./ex2.out <number of threads>\n");
         exit(1);
     }
 

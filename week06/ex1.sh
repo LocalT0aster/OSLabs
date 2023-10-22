@@ -1,13 +1,13 @@
 #!/bin/bash
-gcc agent.c -o agent.exe -lm -Wextra -Wpedantic
-gcc controller.c -o controller.exe -lm -Wextra -Wpedantic
+gcc agent.c -o agent.out -lm -Wextra -Wpedantic
+gcc controller.c -o controller.out -lm -Wextra -Wpedantic
 
 sudo touch /var/run/agent.pid && sudo chmod 666 /var/run/agent.pid
 
-./agent.exe &
+./agent.out &
 sleep 1
-./controller.exe
+./controller.out
 
-rm agent.exe
-rm controller.exe
+rm agent.out
+rm controller.out
 sudo rm /var/run/agent.pid

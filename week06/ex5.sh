@@ -1,7 +1,7 @@
 #!/bin/bash
-gcc scheduler_mc.c -o scheduler.exe -lm -Wextra -Wpedantic
-gcc worker.c -o worker.exe -lm
-./scheduler.exe data.txt
+gcc scheduler_mc.c -o scheduler.out -lm -Wextra -Wpedantic
+gcc worker.c -o worker.out -lm
+./scheduler.out data.txt
 rm scheduler.log
-rm scheduler.exe
-rm worker.exe
+rm scheduler.out
+rm worker.out

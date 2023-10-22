@@ -95,7 +95,7 @@ void create_process(int new_process) {
     if (pid == 0) { // Child process
         char idx_arg[10];
         sprintf(idx_arg, "%d", new_process);
-        char* args[] = { "./worker.exe", idx_arg, NULL };
+        char* args[] = { "./worker.out", idx_arg, NULL };
         execvp(args[0], args);
         exit(0); // exit if execvp fails
     } else if (pid > 0) {

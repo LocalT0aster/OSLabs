@@ -1,4 +1,4 @@
 #!/bin/bash
-gcc -o ex1.exe -O3 ex1.c
-./ex1.exe
-rm ex1.exe
+gcc -o ex1.out -O3 ex1.c
+./ex1.out
+rm ex1.out
