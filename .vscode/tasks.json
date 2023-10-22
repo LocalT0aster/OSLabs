@@ -26,7 +26,7 @@
         {
             "label": "Run current exercise shell script",
             "type": "shell",
-            "command": "python3 ../RunCurrentEx.py ${file}",
+            "command": "python3 ../.RunCurrentEx.py ${file}",
             "options": {
                 "cwd": "${fileDirname}"
             },
@@ -41,7 +41,7 @@
         {
             "label": "Create shell scripts for current week",
             "type": "shell",
-            "command": "python3 CreateBash.py",
+            "command": "python3 .CreateBash.py",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
