@@ -4,7 +4,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/mman.h>
@@ -12,15 +11,18 @@
 #include <pthread.h>
 #include <ctype.h>
 
-#define FILE_SIZE (500L * 1024 * 1024)  // 500 MiB
+#define FILE_SIZE (500L * 1024 * 1024)
 #define LINE_LENGTH 1024
 #define THREAD_N 4
+#define READ_BUF_SIZE 4096
 
 typedef struct {
     char *addr;
     size_t size;
     long capitalCount;
 } ThreadData;
+
+char* addr;
 
 void *generation(void *arg) {
     int fd = open("/dev/urandom", O_RDONLY);
@@ -38,27 +40,33 @@ void *generation(void *arg) {
 
     size_t size_to_generate = FILE_SIZE / THREAD_N;
     size_t generated = 0;
-    char buf[LINE_LENGTH];
+    char read_buf[READ_BUF_SIZE];
+    char write_buf[LINE_LENGTH];
+    size_t write_index = 0;
 
     while (generated < size_to_generate) {
-        size_t i = 0;
-        while (i < sizeof(buf)) {
-            ssize_t n = read(fd, &buf[i], 1);
-            if (n == -1) {
-                perror("Read from /dev/urandom failed");
-                close(fd);
-                fclose(f);
-                exit(EXIT_FAILURE);
-            }
-            if (isprint(buf[i])) {
-                i++;
+        ssize_t n = read(fd, read_buf, READ_BUF_SIZE);
+        if (n <= 0) {
+            perror("Read from /dev/urandom failed");
+            close(fd);
+            fclose(f);
+            exit(EXIT_FAILURE);
+        }
+
+        for (ssize_t i = 0; i < n && generated < size_to_generate; i++) {
+            if (isprint(read_buf[i])) {
+                write_buf[write_index++] = read_buf[i];
+                if (write_index == LINE_LENGTH) {
+                    fwrite(write_buf, 1, LINE_LENGTH, f);
+                    fputc('\n', f);
+                    generated += LINE_LENGTH + 1;
+                    write_index = 0;
+                }
             }
         }
-        fwrite(buf, 1, sizeof(buf), f);
-        fputc('\n', f);
-        generated += sizeof(buf) + 1;
     }
 
+    fflush(f);
     fclose(f);
     close(fd);
     return NULL;
@@ -74,7 +82,9 @@ void *count_and_replace(void *arg) {
             *p = tolower(*p);
         }
     }
-
+    if (msync(addr, FILE_SIZE, MS_SYNC) == -1) {
+        perror("msync failed");
+    }
     return NULL;
 }
 
@@ -94,7 +104,7 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    char *addr = mmap(NULL, FILE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    addr = mmap(NULL, FILE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if (addr == MAP_FAILED) {
         perror("Failed to mmap text.txt");
         close(fd);
@@ -102,12 +112,20 @@ int main() {
     }
 
     long sz = sysconf(_SC_PAGESIZE);
+    printf("sz = %ld\n", sz);
     size_t chunk_size = 1024 * sz;
+    long total_chunks = FILE_SIZE / chunk_size;
+    long chunks_per_thread = total_chunks / THREAD_N;
 
     ThreadData data[THREAD_N];
     for (int i = 0; i < THREAD_N; i++) {
-        data[i].addr = addr + (i * chunk_size * (FILE_SIZE / (chunk_size * THREAD_N)));
-        data[i].size = chunk_size * (FILE_SIZE / (chunk_size * THREAD_N));
+        data[i].addr = addr + (i * chunks_per_thread * chunk_size);
+        if (i == THREAD_N - 1) {
+            // Let the last thread handle the remainder
+            data[i].size = (FILE_SIZE - (i * chunks_per_thread * chunk_size));
+        } else {
+            data[i].size = chunks_per_thread * chunk_size;
+        }
         data[i].capitalCount = 0;
         pthread_create(&threads[i], NULL, count_and_replace, &data[i]);
     }
@@ -120,6 +138,9 @@ int main() {
 
     printf("Total capital letters: %ld\n", totalCapitals);
 
+    if (msync(addr, FILE_SIZE, MS_SYNC) == -1) {
+        perror("msync failed");
+    }
     munmap(addr, FILE_SIZE);
     close(fd);
 
