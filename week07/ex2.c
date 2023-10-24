@@ -12,7 +12,7 @@
 #include <ctype.h>
 
 #define FILE_SIZE (500L * 1024 * 1024)
-#define LINE_LENGTH 1024
+#define LINE_LENGTH 1023
 #define THREAD_N 4
 #define READ_BUF_SIZE 4096
 
@@ -24,7 +24,7 @@ typedef struct {
 
 char* addr;
 
-void *generation(void *arg) {
+void generate() {
     int fd = open("/dev/urandom", O_RDONLY);
     if (fd == -1) {
         perror("Failed to open /dev/urandom");
@@ -38,13 +38,12 @@ void *generation(void *arg) {
         exit(EXIT_FAILURE);
     }
 
-    size_t size_to_generate = FILE_SIZE / THREAD_N;
     size_t generated = 0;
     char read_buf[READ_BUF_SIZE];
     char write_buf[LINE_LENGTH];
     size_t write_index = 0;
 
-    while (generated < size_to_generate) {
+    while (generated < FILE_SIZE) {
         ssize_t n = read(fd, read_buf, READ_BUF_SIZE);
         if (n <= 0) {
             perror("Read from /dev/urandom failed");
@@ -53,7 +52,7 @@ void *generation(void *arg) {
             exit(EXIT_FAILURE);
         }
 
-        for (ssize_t i = 0; i < n && generated < size_to_generate; i++) {
+        for (ssize_t i = 0; i < n && generated < FILE_SIZE; i++) {
             if (isprint(read_buf[i])) {
                 write_buf[write_index++] = read_buf[i];
                 if (write_index == LINE_LENGTH) {
@@ -69,7 +68,7 @@ void *generation(void *arg) {
     fflush(f);
     fclose(f);
     close(fd);
-    return NULL;
+    return;
 }
 
 void *count_and_replace(void *arg) {
@@ -89,14 +88,8 @@ void *count_and_replace(void *arg) {
 }
 
 int main() {
-    // Generate the text.txt file in parallel
-    pthread_t threads[THREAD_N];
-    for (int i = 0; i < THREAD_N; i++) {
-        pthread_create(&threads[i], NULL, generation, NULL);
-    }
-    for (int i = 0; i < THREAD_N; i++) {
-        pthread_join(threads[i], NULL);
-    }
+    // Generate the text.txt file
+    generate();
 
     int fd = open("text.txt", O_RDWR);
     if (fd == -1) {
@@ -112,21 +105,23 @@ int main() {
     }
 
     long sz = sysconf(_SC_PAGESIZE);
-    printf("sz = %ld\n", sz);
     size_t chunk_size = 1024 * sz;
     long total_chunks = FILE_SIZE / chunk_size;
     long chunks_per_thread = total_chunks / THREAD_N;
+    long remainder_chunks = total_chunks % THREAD_N; // Remainder chunks to be distributed
 
+    pthread_t threads[THREAD_N];
     ThreadData data[THREAD_N];
     for (int i = 0; i < THREAD_N; i++) {
         data[i].addr = addr + (i * chunks_per_thread * chunk_size);
-        if (i == THREAD_N - 1) {
-            // Let the last thread handle the remainder
-            data[i].size = (FILE_SIZE - (i * chunks_per_thread * chunk_size));
-        } else {
-            data[i].size = chunks_per_thread * chunk_size;
-        }
+        data[i].size = chunks_per_thread * chunk_size;
         data[i].capitalCount = 0;
+
+        // Distribute remainder chunks to the last thread
+        if (i == THREAD_N - 1) {
+            data[i].size += remainder_chunks * chunk_size;
+        }
+        
         pthread_create(&threads[i], NULL, count_and_replace, &data[i]);
     }
 
