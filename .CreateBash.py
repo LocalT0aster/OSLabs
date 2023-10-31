@@ -1,6 +1,19 @@
 import os
 import stat
 
+
+def bashsrc(i: int) -> str:
+    return f'''#!/bin/bash
+gcc ex{i}.c -o ex{i}.out -lm -Wextra -Wpedantic
+if [ $? -ne 0 ]; then
+    echo "Compilation failed!"
+    exit 1
+fi
+./ex{i}.out
+rm ex{i}.out
+'''
+
+
 print("Enter the number of week:")
 week = int(input())
 print("Enter number of shell scripts to create:")
@@ -15,7 +28,7 @@ for i in range(1,n):
     try:
         shname = f'{basepath}ex{i}.sh'
         with open(shname, 'x')as f:
-            f.write(f'#!/bin/bash\ngcc ex{i}.c -o ex{i}.out -lm -Wextra -Wpedantic\n./ex{i}.out\nrm ex{i}.out\n')
+            f.write(bashsrc(i))
             f.flush()
             f.close()
         os.chmod(shname, stat.S_IMODE(os.stat(shname).st_mode | stat.S_IEXEC))

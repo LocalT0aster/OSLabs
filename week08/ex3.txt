@@ -1,0 +1,9 @@
+While running the program ex3.c, which allocates 10 MB of memory every second and fills it with zeros, the following observations were made with vmstat:
+
+1. Initially, the memory usage increased steadily as seen in the `ru_maxrss` printouts from the program.
+2. The `si` and `so` fields from vmstat were of particular interest. These fields represent the amount of memory that was swapped in and out to disk, respectively.
+3. As the program continued to allocate more memory, if the system's available RAM began to deplete, an increase in the values of `si` and `so` was observed. This indicates that the system started swapping memory contents between RAM and swap space on the disk to cope with the increasing demand.
+4. Continuous allocation of memory and subsequent filling with zeros put pressure on the system's RAM. This pressure might cause other applications or even parts of the OS to be swapped out to disk if RAM runs out.
+
+Conclusion:
+Continuous allocation of large amounts of memory, especially when filling it, can stress the system's available RAM, leading to potential swapping if the system runs low on available memory. It's essential to be mindful of memory management in applications to ensure system stability and performance.
