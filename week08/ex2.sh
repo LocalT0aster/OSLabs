@@ -1,5 +1,5 @@
 #!/bin/bash
-
+sudo mkdir -p /tmp/ex2 && sudo rm -f /tmp/ex2/pagetable || true
 # Compile the mmu and pager programs
 gcc mmu.c -o mmu.out -lm -Wextra -Wpedantic
 gcc pager.c -o pager.out -lm -Wextra -Wpedantic
@@ -14,9 +14,6 @@ fi
 ./pager.out 4 2 &
 pager_pid=$!
 
-# Wait a bit to ensure the pager has started
-sleep 1
-
 # Run the MMU with the reference string and the pager's PID
 ./mmu.out 4 R0 R1 W1 R0 R2 W2 R0 R3 W2 $pager_pid
 
@@ -24,7 +21,7 @@ sleep 1
 wait
 
 # Clean up the PID file
-rm -f .mmu.pid pager.out mmu.out
+rm -f .mmu.pid pager.out mmu.out || true
 
 # Print a message when the script has finished running
 echo "Simulation complete."

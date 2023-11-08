@@ -10,7 +10,7 @@
 #include <unistd.h>
 
 #define PAGE_TABLE_SIZE 256 // Assuming a maximum of 256 pages
-#define SHARED_MEMORY_OBJECT "/tmp/ex2/pagetable"
+#define PAGETABLE_PATH "/ex2_pagetable"
 
 typedef struct {
     int valid;
@@ -23,8 +23,8 @@ typedef struct {
 
 page_table_entry* page_table = NULL;
 int num_pages;
+
 pid_t pager_pid;
-int shm_fd; // File descriptor for the shared memory object
 
 // Function to signal pager for page fault
 void signal_pager_for_page_fault(int page_number) {
@@ -73,19 +73,32 @@ void handle_memory_access(char* access) {
     print_page_table();
 }
 
-// Function to initialize shared memory for page table
+// Function to initialize page table using a temporary file
 void initialize_page_table() {
-    shm_fd = shm_open(SHARED_MEMORY_OBJECT, O_CREAT | O_RDWR, 0666);
-    if (shm_fd == -1) {
-        perror("shm_open");
+    // Open a temporary file for the page table
+    int fd = open(PAGETABLE_PATH, O_CREAT | O_RDWR, 0666);
+    if (fd == -1) {
+        perror("open");
         exit(EXIT_FAILURE);
     }
-    ftruncate(shm_fd, num_pages * sizeof(page_table_entry));
-    page_table = mmap(0, num_pages * sizeof(page_table_entry), PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
+
+    // Size the file
+    if (ftruncate(fd, num_pages * sizeof(page_table_entry)) == -1) {
+        perror("ftruncate");
+        close(fd);
+        exit(EXIT_FAILURE);
+    }
+
+    // Map the file into memory
+    page_table = mmap(NULL, num_pages * sizeof(page_table_entry), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if (page_table == MAP_FAILED) {
         perror("mmap");
+        close(fd);
         exit(EXIT_FAILURE);
     }
+
+    // The file descriptor is no longer needed after the memory is mapped
+    close(fd);
 }
 
 void write_pid() {
@@ -93,12 +106,14 @@ void write_pid() {
     FILE* pid_file = fopen(".mmu.pid", "w");
     if (!pid_file) {
         perror("Error opening MMU PID file for writing");
-        return EXIT_FAILURE;
+        exit(EXIT_FAILURE);
     }
     fprintf(pid_file, "%d", getpid());
     fflush(pid_file);
     fclose(pid_file);
 }
+
+void sigcont_handler(int signum) {}
 
 int main(int argc, char* argv[]) {
     // Ensure the correct number of arguments
@@ -107,8 +122,6 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    write_pid();
-
     // Parse the number of pages
     num_pages = atoi(argv[1]);
     if (num_pages <= 0 || num_pages > PAGE_TABLE_SIZE) {
@@ -116,13 +129,28 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
-
     // Parse the pager PID
     pager_pid = (pid_t)atoi(argv[argc - 1]);
     if (pager_pid <= 0) {
         fprintf(stderr, "Invalid pager PID.\n");
         return EXIT_FAILURE;
     }
+
+    // Bind SIGCONT to sigcont_handler()
+    struct sigaction sa;
+    memset(&sa, 0, sizeof(sa));
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sa.sa_handler = sigcont_handler;
+    sigaction(SIGCONT, &sa, NULL);
+
+    // PID exchange mmu side
+    write_pid();
+    sleep(1);
+    kill(pager_pid, SIGCONT);
+    printf("PID write done, waiting for pager.\n");
+    pause();
+    printf("PID exchange successfull\n");
 
     // Initialize page table
     // Using an anonymous mapping for simplicity
@@ -148,7 +176,7 @@ int main(int argc, char* argv[]) {
 
     // Cleanup
     munmap(page_table, num_pages * sizeof(page_table_entry));
-    shm_unlink(SHARED_MEMORY_OBJECT); // Remove the shared memory object
+    shm_unlink(PAGETABLE_PATH); // Remove the shared memory object
 
     return EXIT_SUCCESS;
 }

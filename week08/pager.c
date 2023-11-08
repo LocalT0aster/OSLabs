@@ -14,7 +14,7 @@
 
 #define MAX_FRAMES 256
 #define PAGE_SIZE 8
-#define SHARED_MEMORY_OBJECT "/tmp/ex2/pagetable"
+#define PAGETABLE_PATH "/ex2_pagetable"
 
 typedef struct {
     int valid;
@@ -29,9 +29,16 @@ page_table_entry* page_table = NULL;
 
 int num_frames, num_pages;
 int num_disk_accesses = 0;
-int shm_fd; // File descriptor for the shared memory object
 
 pid_t mmu_pid;
+
+// Function to print the RAM array
+void print_ram() {
+    printf("RAM Content:\n");
+    for (int i = 0; i < num_frames; i++) {
+        printf("%s\n", ram[i]);
+    }
+}
 
 // Function to find a free frame, or return -1 if none are free
 int find_free_frame() {
@@ -75,6 +82,7 @@ void page_fault_handler(int sig) {
     page_table[page_number].valid = 1;
     page_table[page_number].frame = frame_number;
 
+    print_ram();
     // Send a signal back to the MMU to continue
     kill(mmu_pid, SIGCONT);
 }
@@ -83,32 +91,72 @@ void page_fault_handler(int sig) {
 void termination_handler(int sig) {
     // Print the total number of disk accesses
     printf("Total number of disk accesses: %d\n", num_disk_accesses);
+    
+    // Print the final state of the RAM before termination
+    print_ram();
 
-    // Cleanup and termination
-    // ...
+    // Unmap the page table shared memory
+    if (munmap(page_table, num_pages * sizeof(page_table_entry)) == -1) {
+        perror("Error unmunmapping the page table");
+    }
 
+    // Unlink the shared memory object
+    if (shm_unlink(PAGETABLE_PATH) == -1) {
+        perror("Error unlinking shared memory");
+    }
+
+    // Any additional cleanup can be done here
+
+    // Exit the program
     exit(EXIT_SUCCESS);
 }
 
-// Function to initialize disk with random messages
-void initialize_disk() {
-    for (int i = 0; i < num_pages; i++) {
-        snprintf(disk[i], PAGE_SIZE, "Page%d", i);
+
+// Function to initialize RAM with empty strings
+void initialize_ram() {
+    for (int i = 0; i < num_frames; i++) {
+        strncpy(ram[i], "", PAGE_SIZE);
     }
 }
 
-void initialize_shared_memory() {
-    shm_fd = shm_open(SHARED_MEMORY_OBJECT, O_CREAT | O_RDWR, 0666);
-    if (shm_fd == -1) {
-        perror("shm_open");
+// Function to initialize disk with different random messages
+void initialize_disk() {
+    const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    for (int i = 0; i < num_pages; i++) {
+        for (int j = 0; j < PAGE_SIZE - 1; j++) {
+            int key = rand() % (int)(sizeof(charset) - 1);
+            disk[i][j] = charset[key];
+        }
+        disk[i][PAGE_SIZE - 1] = '\0'; // Null-terminate the string
+    }
+}
+
+// Function to initialize page table using a temporary file
+void initialize_page_table() {
+    // Open a temporary file for the page table
+    int fd = open(PAGETABLE_PATH, O_CREAT | O_RDWR, 0666);
+    if (fd == -1) {
+        perror("open");
         exit(EXIT_FAILURE);
     }
-    ftruncate(shm_fd, num_pages * sizeof(page_table_entry));
-    page_table = mmap(0, num_pages * sizeof(page_table_entry), PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
+
+    // Size the file
+    if (ftruncate(fd, num_pages * sizeof(page_table_entry)) == -1) {
+        perror("ftruncate");
+        close(fd);
+        exit(EXIT_FAILURE);
+    }
+
+    // Map the file into memory
+    page_table = mmap(NULL, num_pages * sizeof(page_table_entry), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if (page_table == MAP_FAILED) {
         perror("mmap");
+        close(fd);
         exit(EXIT_FAILURE);
     }
+
+    // The file descriptor is no longer needed after the memory is mapped
+    close(fd);
 }
 
 
@@ -127,13 +175,14 @@ void read_mmu_pid() {
     fclose(pid_file);
 }
 
+void sigcont_handler(int signum) {}
+
 int main(int argc, char* argv[]) {
     // Ensure the correct number of arguments
     if (argc != 3) {
         fprintf(stderr, "Usage: %s <num_pages> <num_frames>\n", argv[0]);
-        return EXIT_FAILURE;
+        // return EXIT_FAILURE;
     }
-    read_mmu_pid();
 
     // Parse the number of pages and frames
     num_pages = atoi(argv[1]);
@@ -144,9 +193,9 @@ int main(int argc, char* argv[]) {
     }
 
     // Initialize shared memory for the page table
-    initialize_shared_memory();
+    initialize_page_table();
 
-    // Initialize the disk with random messages
+    initialize_ram();
     initialize_disk();
 
     // Initialize random number generator for victim frame selection
@@ -161,19 +210,29 @@ int main(int argc, char* argv[]) {
 
     // Setup signal handlers for page fault and termination
     struct sigaction sa;
-    sa.sa_handler = page_fault_handler;
+    memset(&sa, 0, sizeof(sa));
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = 0;
+    sa.sa_handler = sigcont_handler;
+    sigaction(SIGCONT, &sa, NULL);
+
+    sa.sa_handler = page_fault_handler;
     sigaction(SIGUSR1, &sa, NULL);
 
     sa.sa_handler = termination_handler;
     sigaction(SIGUSR2, &sa, NULL);
 
+    // PID exchange pager side
+    printf("Initialization done, waiting for mmu.\n");
+    pause();
+    printf("Reading PID...\n");
+    read_mmu_pid();
+    kill(mmu_pid, SIGCONT);
+
+
     while (1) {
         pause(); // Wait for a signal
     }
-
-    // Cleanup would be here if necessary
 
     return EXIT_SUCCESS;
 }
