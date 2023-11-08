@@ -63,3 +63,5 @@ dkms.conf
 week*/.*.py
 
 week07/text.txt
+
+*.pid

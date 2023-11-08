@@ -1,8 +1,30 @@
 #!/bin/bash
-gcc ex2.c -o ex2.out -lm -Wextra -Wpedantic
-if [ $? -ne 0 ]; then
-    echo "Compilation failed!"
+
+# Compile the mmu and pager programs
+gcc mmu.c -o mmu.out -lm -Wextra -Wpedantic
+gcc pager.c -o pager.out -lm -Wextra -Wpedantic
+
+# Check if the compilation was successful
+if [ ! -f mmu.out ] || [ ! -f pager.out ]; then
+    echo "Compilation failed."
     exit 1
 fi
-./ex2.out
-rm ex2.out
+
+# Run the pager in the background and get its PID
+./pager.out 4 2 &
+pager_pid=$!
+
+# Wait a bit to ensure the pager has started
+sleep 1
+
+# Run the MMU with the reference string and the pager's PID
+./mmu.out 4 R0 R1 W1 R0 R2 W2 R0 R3 W2 $pager_pid
+
+# Wait for the MMU to finish
+wait
+
+# Clean up the PID file
+rm -f .mmu.pid pager.out mmu.out
+
+# Print a message when the script has finished running
+echo "Simulation complete."
