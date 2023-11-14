@@ -11,8 +11,10 @@
 
 ## Contents
 
-- [README.md](./README.md)
+<details>
+<summary>.</summary>
 
+- [README.md](./README.md)
 <details>
 <summary>week00(misc)</summary>
 
@@ -119,7 +121,7 @@
 - [worker.c](./week06/worker.c)
 
 </details>
-<details open>
+<details>
 <summary>week07</summary>
 
 - [allocator.c](./week07/allocator.c)
@@ -128,5 +130,45 @@
 - [ex2.c](./week07/ex2.c)
 - [ex2.sh](./week07/ex2.sh)
 - [queries.txt](./week07/queries.txt)
+- [text.txt](./week07/text.txt)
+
+</details>
+<details>
+<summary>week08</summary>
+
+- [ex1.c](./week08/ex1.c)
+- [ex1_hack.sh](./week08/ex1_hack.sh)
+- [ex2.sh](./week08/ex2.sh)
+- [ex3.c](./week08/ex3.c)
+- [ex3.log](./week08/ex3.log)
+- [ex3.sh](./week08/ex3.sh)
+- [ex3.txt](./week08/ex3.txt)
+- [mmu.c](./week08/mmu.c)
+- [mmu.out](./week08/mmu.out)
+- [pager.c](./week08/pager.c)
+- [pager.out](./week08/pager.out)
+
+</details>
+<details>
+<summary>week09</summary>
+
+- [ex1.sh](./week09/ex1.sh)
+
+</details>
+<details open>
+<summary>week10</summary>
+
+- [ex1.c](./week10/ex1.c)
+- [ex1.sh](./week10/ex1.sh)
+- [ex1_test.sh](./week10/ex1_test.sh)
+- [ex1.txt](./week10/ex1.txt)
+- [ex21.sh](./week10/ex21.sh)
+- [ex22.sh](./week10/ex22.sh)
+- [ex23.sh](./week10/ex23.sh)
+- [ex24.sh](./week10/ex24.sh)
+- [ex25.sh](./week10/ex25.sh)
+- [monitor.c](./week10/monitor.c)
+
+</details>
 
 </details>
