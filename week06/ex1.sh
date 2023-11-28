@@ -1,6 +1,6 @@
 #!/bin/bash
-gcc agent.c -o agent.out -lm -Wextra -Wpedantic
-gcc controller.c -o controller.out -lm -Wextra -Wpedantic
+gcc agent.c -o agent.out -Wextra -Wpedantic
+gcc controller.c -o controller.out -Wextra -Wpedantic
 
 sudo touch /var/run/agent.pid && sudo chmod 666 /var/run/agent.pid
 

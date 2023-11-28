@@ -1,5 +1,5 @@
 #!/bin/bash
-gcc ex3.c -o ex3.out -O2 -lpthread -lm -Wextra -Wpedantic
+gcc ex3.c -o ex3.out -O2 -lpthread -Wextra -Wpedantic
 echo "Timing results:" > ex3_res.txt
 for m in 1 2 4 10 100
 do

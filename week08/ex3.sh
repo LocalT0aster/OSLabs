@@ -1,5 +1,5 @@
 #!/bin/bash
-gcc ex3.c -o ex3.out -O1 -lm -Wextra -Wpedantic
+gcc ex3.c -o ex3.out -O1 -Wextra -Wpedantic
 if [ $? -ne 0 ]; then
     echo "Compilation failed!"
     exit 1

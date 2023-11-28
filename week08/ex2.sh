@@ -1,8 +1,8 @@
 #!/bin/bash
 sudo mkdir -p /tmp/ex2 && sudo rm -f /tmp/ex2/pagetable || true
 # Compile the mmu and pager programs
-gcc mmu.c -o mmu.out -lm -Wextra -Wpedantic
-gcc pager.c -o pager.out -lm -Wextra -Wpedantic
+gcc mmu.c -o mmu.out -Wextra -Wpedantic
+gcc pager.c -o pager.out -Wextra -Wpedantic
 
 # Check if the compilation was successful
 if [ ! -f mmu.out ] || [ ! -f pager.out ]; then

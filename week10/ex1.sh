@@ -1,6 +1,6 @@
 #!/bin/bash
-gcc monitor.c -o monitor.out -lm -Wextra -Wpedantic
-gcc ex1.c -o ex1.out -lm -Wextra -Wpedantic
+gcc monitor.c -o monitor.out -Wextra -Wpedantic
+gcc ex1.c -o ex1.out -Wextra -Wpedantic
 if [ $? -ne 0 ]; then
     echo "Compilation failed!"
     exit 1

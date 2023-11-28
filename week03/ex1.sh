@@ -1,4 +1,4 @@
 #!/bin/bash
-gcc ex1.c -o ex1.out -lm
+gcc ex1.c -o ex1.out
 ./ex1.out
 rm ex1.out

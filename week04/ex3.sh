@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Compile the C program
-gcc ex3.c -o ex3.out -lm
+gcc ex3.c -o ex3.out
 
 # Run the program with n=3 in the background
 ./ex3 3 &

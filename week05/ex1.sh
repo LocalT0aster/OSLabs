@@ -1,6 +1,6 @@
 #!/bin/bash
-gcc publisher.c -o publisher.out -lm -Wextra -Wpedantic
-gcc subscriber.c -o subscriber.out -lm -Wextra -Wpedantic
+gcc publisher.c -o publisher.out -Wextra -Wpedantic
+gcc subscriber.c -o subscriber.out -Wextra -Wpedantic
 
 if [ "$#" -ne 1 ]; then
     echo "Usage: $0 <number of subscribers>"
