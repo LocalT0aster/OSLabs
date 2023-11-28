@@ -1,87 +1,87 @@
 // ex1
+// Code by @LocalT0aster (Danil Nesterov d.nesterov@innopolis.university)
+// Run ./ex1.sh to compile and launch
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
 #include <linux/input-event-codes.h>
 #include <linux/input.h>
 #include <stdbool.h>
 
-/**
- * @brief Function to print event information
- *
- * @param event_type Type of event to print
- * @param code The key code
+#define KEYBOARD_PATH "/dev/input/by-path/platform-i8042-serio-0-event-kbd"
+
+// Global varibles
+bool* keys; // An array that stores every key position.
+struct input_event inputEv; // Latest input event
+int keyboardFD; // Keyboard file descriptor
+
+const char* shortcutMsg =
+"Available Shortcuts:\n"
+"P+E -> \"I passed the Exam!\"\n"
+"C+A+P -> \"Get some cappuccino!\"\n"
+"K+Y+S -> \"Keep Yourself Safe!\"\n"
+"E+X -> Exit program\n";
+
+/** Print input event information
+ * @param event event to print
+ * @param keycode key code
  */
-void print_event(const char* event_type, int code) {
-    printf("%s 0x%04x (%d)\n", event_type, code, code);
+void print_event(const char* event, int keycode) {
+    printf("%s 0x%04x (%d)\n", event, keycode, keycode);
 }
 
-/**
- * @brief Program entry point function
- *
- * @return int exit code
- */
 int main() {
-    // Stores latest event data
-    struct input_event ev;
-    // Flag that prevents the program from exiting
-    bool running = 1;
-    // Array that stores every state of the keybooard keys. 1 is PRESSED 2 is RELEASED
-    bool* keystate = calloc(256, sizeof(bool)); // P.S. The implementation is not memory optimal, but fast.
-    // Keyboard file stream
-    FILE* kbfile = fopen("/dev/input/by-path/platform-i8042-serio-0-event-kbd", "r");
-    // Exit the program if we cannot open the file
-    if (kbfile == NULL) {
+    // Initialize variables
+    keys = calloc(0x100, sizeof(bool));
+    keyboardFD = open(KEYBOARD_PATH, O_RDONLY);
+    // Handle file opening errors
+    if (keyboardFD == -1) {
         perror("Cannot open device");
         exit(EXIT_FAILURE);
     }
 
     // Print available shortcuts
-    printf("Available Shortcuts:\n");
-    printf("P+E -> 'I passed the Exam!'\n");
-    printf("C+A+P -> 'Get some cappuccino!'\n");
-    printf("LSHIFT+RSHIFT -> 'Turbo Boost!'\n");
+    printf(shortcutMsg);
 
-    // Main program loop
-    while (running) {
-        // If the read from keybord returns an error, exit the program
-        if (fread(&ev, sizeof(struct input_event), 1, kbfile) == 0) {
+    bool isRunning = true;
+    while (isRunning) {
+        // Read and handle read errors
+        if (read(keyboardFD, &inputEv, sizeof(struct input_event)) <= 0) {
             perror("Error while reading from keyboard.");
-            running = 0;
+            isRunning = false;
         }
-        // If event type is EV_KEY type
-        if (ev.type == EV_KEY) {
-            // Event value switch
-            switch (ev.value) {
-            case 0: // Key Released
-                print_event("RELEASED", ev.code);
-                keystate[ev.code] = 0; // Change keystate[KEY] to RELEASED state
-                break;
-            case 1: // Key Pressed
-                print_event("PRESSED", ev.code);
-                keystate[ev.code] = 1; // Change keystate[KEY] to PRESSED state
-                break;
-            case 2: // Key Repeated
-                print_event("REPEATED", ev.code);
-                break;
-            }
-            // Check for the exit shortcut
-            if (keystate[KEY_E] && keystate[KEY_X])
-                running = 0;
 
-            // Check for 'I passed the Exam!' shortcut
-            if (keystate[KEY_P] && keystate[KEY_E])
+        if (inputEv.type == EV_KEY) { // The keyboard input event type is EV_KEY
+            if (inputEv.value == 1) {
+                print_event("PRESSED", inputEv.code);
+                keys[inputEv.code] = true; // Update keys[KEY] to PRESSED state
+            } else if (inputEv.value == 2)
+                print_event("REPEATED", inputEv.code);
+            else {
+                print_event("RELEASED", inputEv.code);
+                keys[inputEv.code] = false; // Update keys[KEY] to RELEASED state
+            }
+            
+            // Exit shortcut check
+            if (keys[KEY_E] && keys[KEY_X])
+                isRunning = false;
+
+            // "I passed the Exam!" shortcut check
+            if (keys[KEY_P] && keys[KEY_E])
                 printf("I passed the Exam!\n");
 
-            // Check for 'Get some cappuccino!' shortcut
-            if (keystate[KEY_C] && keystate[KEY_A] && keystate[KEY_P])
+            // "Get some cappuccino!" shortcut check
+            if (keys[KEY_C] && keys[KEY_A] && keys[KEY_P])
                 printf("Get some cappuccino!\n");
 
-            // Check for 'Turbo Boost!' shortcut
-            if (keystate[KEY_LEFTSHIFT] && keystate[KEY_RIGHTSHIFT])
-                printf("Turbo boost!\n");
+            // "Keep Yourself Safe!" shortcut check
+            if (keys[KEY_K] && keys[KEY_Y] && keys[KEY_S])
+                printf("Keep Yourself Safe!\n");
         }
     }
     // Close the file before exiting
-    fclose(kbfile);
-    return 0;
+    free(keys); // Free keys :O
+    close(keyboardFD);
+    return EXIT_SUCCESS;
 }
