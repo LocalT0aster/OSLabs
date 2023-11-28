@@ -65,3 +65,5 @@ week*/.*.py
 week07/text.txt
 
 *.pid
+*.img
+*/lofsdisk
