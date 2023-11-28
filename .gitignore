@@ -54,16 +54,20 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+# Assembly files
+*.s
+
 # VSCode directory
 # .vscode/
 
-# Ignore hidden .c files
+# Hidden .c files
 .*.c
-# Ignore hidden .py files in week* folders
+
+# Hidden .py files in week* folders
 week*/.*.py
 
+# Custom temp files
 week07/text.txt
-
 *.pid
 *.img
 */lofsdisk

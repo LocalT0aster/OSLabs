@@ -46,6 +46,90 @@
                 "cwd": "${workspaceFolder}"
             },
             "problemMatcher": []
+        },
+        {
+            "label": "Just Compile (gcc -S) O0",
+            "type": "cppbuild",
+            "command": "gcc",
+            "args": [
+                "${file}",
+                "-o",
+                "${fileBasenameNoExtension}.O0.s",
+                "-S",
+                "-O0",
+                "-Wextra",
+                "-Wpedantic"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        },
+        {
+            "label": "Just Compile (gcc -S) O1",
+            "type": "cppbuild",
+            "command": "gcc",
+            "args": [
+                "${file}",
+                "-o",
+                "${fileBasenameNoExtension}.O1.s",
+                "-S",
+                "-O1",
+                "-Wextra",
+                "-Wpedantic"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        },
+        {
+            "label": "Just Compile (gcc -S) O2",
+            "type": "cppbuild",
+            "command": "gcc",
+            "args": [
+                "${file}",
+                "-o",
+                "${fileBasenameNoExtension}.O2.s",
+                "-S",
+                "-O2",
+                "-Wextra",
+                "-Wpedantic"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        },
+        {
+            "label": "Just Compile (gcc -S) O3",
+            "type": "cppbuild",
+            "command": "gcc",
+            "args": [
+                "${file}",
+                "-o",
+                "${fileBasenameNoExtension}.O3.s",
+                "-S",
+                "-O3",
+                "-Wextra",
+                "-Wpedantic"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
         }
     ],
     "version": "2.0.0"
