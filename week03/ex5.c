@@ -7,12 +7,19 @@
 
 typedef struct StackNode StackNode;
 
+/**
+ * Stores arbitrary pointers to free later.
+ */
 struct StackNode {
     void* p;
     StackNode* prev;
 };
 StackNode* top = NULL;
 
+/**
+ * @brief Pushes a pointer to a stack, replaces pointer to the top of the stack.
+ * @param p Arbitrary pointer to free at the end of execution.
+ */
 void push(void* p) {
     StackNode* temp = calloc(1, sizeof(StackNode));
     temp->p = p;
@@ -20,6 +27,10 @@ void push(void* p) {
     top = temp;
 }
 
+/**
+ * @brief Takes out a pointer from the stack.
+ * @return StackNode* Pointer that you can free.
+ */
 StackNode* pop() {
     if (top == NULL) {
         return NULL;
@@ -37,7 +48,17 @@ void* add_double(const void* a, const void* b);
 void* multiply_double(const void* a, const void* b);
 void* max_double(const void* a, const void* b);
 
-// Aggregation function
+/**
+ * @brief Aggregate the data according to the assignment.
+ * 
+ * @param base array to aggregate
+ * @param size size of data type in bytes
+ * @param n number of elements in array
+ * @param initial_value Initial value of the result
+ * @param opr operator function pointer
+ * @param ... unused, because it is not specified what functionality to extend (I have no idea), but to make the function variadic you can add ... to the arguments. https://en.cppreference.com/w/c/variadic
+ * @return ** void* pointer to a result located in heap
+ */
 void* vaggregate(void* base, size_t size, int n, void* initial_value, void* (*opr)(const void*, const void*), ...) {
     char* ptr = (char*)base;
     for (int i = 0; i < n; i++, ptr += size)
