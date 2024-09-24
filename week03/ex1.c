@@ -23,7 +23,7 @@ int main() {
     p[2] *= 2; // multiply x by 2
     // Check if cells are contiguous
     if ((char*)&p[2] - (char*)&p[1] != sizeof(int) || (char*)&p[1] - (char*)&p[0] != sizeof(int))
-        printf("Cells are not contiguous!, difference:%ld, %ld\n", (char*)&p[2] - (char*)&p[1], (char*)&p[1] - (char*)&p[0]);
+        printf("Cells are not contiguous!, difference:%ld, %ld\n", (char*)&p[2] - (char*)&p[1], (char*)&p[1] - (char*)&p[0]); // This line is theoretically unreachable.
     else
         printf("Cells are contiguous.\n");
     printf("%d\n%d\n", const_tri(p, 4), const_tri(p, 36));

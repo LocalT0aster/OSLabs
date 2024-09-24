@@ -1,8 +1,15 @@
 {
     "files.associations": {
+        ".fantomasignore": "ignore",
+        "*.s": "asm-intel-x86-generic",
         "input.h": "c",
         "input-event-codes.h": "c",
         "fcntl.h": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "errno.h": "c",
+        "errno-base.h": "c",
+        "string.h": "c",
+        "features.h": "c",
+        "float.h": "c"
     }
 }

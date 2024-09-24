@@ -1,15 +1,22 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
+
+char *dict; // Memory greedy memoization approach
 
 // Function to count the occurrence of a character in a string
 int count(const char* str, char c) {
+    if (dict[c] != 0) {
+        return dict[c];
+    }
     int cnt = 0;
     for (int i = 0; str[i] != '\0'; ++i) {
         if (tolower(str[i]) == tolower(c)) {
             ++cnt;
         }
     }
+    dict[c] = cnt;
     return cnt;
 }
 
@@ -24,6 +31,7 @@ void countAll(const char* str) {
 
 int main(int argc, char* argv[]) {
     char inputStr[256]; // To store the string if not provided as an argument
+    dict = calloc(256, 1);
 
     if (argc == 2) {
         // Count all character occurrences using the argument
@@ -31,8 +39,10 @@ int main(int argc, char* argv[]) {
     } else {
         printf("Enter a string: ");
         if (fgets(inputStr, sizeof(inputStr), stdin) == NULL) {
+            errno = EIO;
             perror("Error reading input");
-            return 1;
+            free(dict);
+            return EIO;
         }
 
         // Remove trailing newline character
@@ -44,6 +54,7 @@ int main(int argc, char* argv[]) {
         // Count all character occurrences using the entered string
         countAll(inputStr);
     }
+    free(dict);
 
     return 0;
 }

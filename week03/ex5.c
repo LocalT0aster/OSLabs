@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <limits.h>
 #include <float.h>
 #include <errno.h>
@@ -37,7 +38,7 @@ void* multiply_double(const void* a, const void* b);
 void* max_double(const void* a, const void* b);
 
 // Aggregation function
-void* aggregate(void* base, size_t size, int n, void* initial_value, void* (*opr)(const void*, const void*)) {
+void* vaggregate(void* base, size_t size, int n, void* initial_value, void* (*opr)(const void*, const void*), ...) {
     char* ptr = (char*)base;
     for (int i = 0; i < n; i++, ptr += size)
         initial_value = opr(initial_value, ptr);
@@ -54,14 +55,14 @@ int main() {
     double doubleZero = 0, doubleOne = 1, doubleMin = -DBL_MAX;
 
     // Perform aggregate operations on integer array
-    int intSum = *(int*)aggregate(intArr, sizeof(int), 5, &intZero, add_int);
-    int intProduct = *(int*)aggregate(intArr, sizeof(int), 5, &intOne, multiply_int);
-    int intMax = *(int*)aggregate(intArr, sizeof(int), 5, &intMin, max_int);
+    int intSum = *(int*)vaggregate(intArr, sizeof(int), 5, &intZero, add_int);
+    int intProduct = *(int*)vaggregate(intArr, sizeof(int), 5, &intOne, multiply_int);
+    int intMax = *(int*)vaggregate(intArr, sizeof(int), 5, &intMin, max_int);
 
     // Perform aggregate operations on double array
-    double doubleSum = *(double*)aggregate(doubleArr, sizeof(double), 5, &doubleZero, add_double);
-    double doubleProduct = *(double*)aggregate(doubleArr, sizeof(double), 5, &doubleOne, multiply_double);
-    double doubleMax = *(double*)aggregate(doubleArr, sizeof(double), 5, &doubleMin, max_double);
+    double doubleSum = *(double*)vaggregate(doubleArr, sizeof(double), 5, &doubleZero, add_double);
+    double doubleProduct = *(double*)vaggregate(doubleArr, sizeof(double), 5, &doubleOne, multiply_double);
+    double doubleMax = *(double*)vaggregate(doubleArr, sizeof(double), 5, &doubleMin, max_double);
 
     // Print the results
     printf("Integer Array Results\n");

@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <time.h>
+#include <errno.h>
 
 #define SIZE 120
 
@@ -28,41 +29,48 @@ int main() {
     generate_vector(u);
     generate_vector(v);
 
-    int n;
+    int p_num;
     printf("Enter the number of processes: ");
-    scanf("%d", &n);
-    n %= 121;
+    scanf("%d", &p_num);
+    p_num %= 121;
+    if(p_num == 0){
+        errno = 10;
+        perror("No workers to do the job");
+        exit(10);
+    }
 
-    int el_per_process = SIZE / n;
-    char isEvenLoaded = el_per_process * n == SIZE;
+    int el_per_process = SIZE / p_num;
+    char isEvenLoaded = el_per_process * p_num == SIZE;
 
     FILE* file = fopen("temp.txt", "w");
     if (file == NULL) {
+        errno = 1;
         perror("Failed to open the file");
         exit(1);
     }
     int s, i, start;
     pid_t pid;
-    if (n < 1) {
+    if (p_num < 1) {
         dot_product(u, v, SIZE);
     } else {
-        for (i = 0; i < n; ++i) {
+        for (i = 0; i < p_num; ++i) {
             pid = fork();
 
             if (pid == 0) {  // Child process
                 start = i * el_per_process;
-                s = !isEvenLoaded && i == n - 1 ? SIZE + el_per_process * (1 - n) : el_per_process;
+                s = !isEvenLoaded && i == p_num - 1 ? SIZE + el_per_process * (1 - p_num) : el_per_process;
                 fprintf(file, "%d\n", dot_product(u + start, v + start, s));
                 fclose(file);
                 exit(0);  // Important: make sure child process exits after computation
             } else if (pid < 0) {
+                errno = 10;
                 perror("Fork failed");
-                exit(1);
+                exit(10);
             }
         }
     }
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < p_num; i++) {
         wait(NULL);
     }
 
