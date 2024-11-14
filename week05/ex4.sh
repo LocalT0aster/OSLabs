@@ -1,5 +1,5 @@
 #!/bin/bash
-gcc ex4.c -o ex4.out -lpthread -Wextra -Wpedantic
+gcc ex4.c -o ex4.out -lpthread -Wall
 echo "Timing results:" > ex4_res.txt
 for m in 1 2 4 10 100
 do

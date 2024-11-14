@@ -5,7 +5,7 @@ if [ "$(whoami)" != "root" ]; then
     exit 1
 fi
 
-gcc ex1.c -o ex1 -Wextra -Wpedantic
+gcc ex1.c -o ex1 -Wall
 if [ $? -ne 0 ]; then
     echo "Compilation failed!"
     exit 1

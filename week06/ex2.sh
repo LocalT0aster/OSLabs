@@ -1,6 +1,6 @@
 #!/bin/bash
-gcc scheduler.c -o scheduler.out -Wextra -Wpedantic
-gcc worker.c -o worker.out -Wextra -Wpedantic
+gcc scheduler.c -o scheduler.out -Wall
+gcc worker.c -o worker.out -Wall
 rm scheduler.log
 ./scheduler.out data.txt
 rm scheduler.out

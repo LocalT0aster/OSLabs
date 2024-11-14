@@ -1,5 +1,5 @@
 #!/bin/bash
-gcc ex1.c -o ex1.out -O3 -Wextra -Wpedantic -Wno-format-security
+gcc ex1.c -o ex1.out -O3 -Wall -Wno-format-security
 if [ $? -ne 0 ]; then
     echo "Compilation failed!"
     exit 1

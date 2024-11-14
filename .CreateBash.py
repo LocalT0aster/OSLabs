@@ -4,7 +4,7 @@ import stat
 
 def bashsrc(i: int) -> str:
     return f'''#!/bin/bash
-gcc ex{i}.c -o ex{i}.out -Wextra -Wpedantic
+gcc ex{i}.c -o ex{i}.out -Wall
 if [ $? -ne 0 ]; then
     echo "Compilation failed!"
     exit 1

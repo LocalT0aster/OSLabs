@@ -1,6 +1,6 @@
 #!/bin/bash
 # Compilation
-gcc ex1.c -o ex1.out -O0 -Wextra -Wpedantic
+gcc ex1.c -o ex1.out -O0 -Wall
 if [ $? -ne 0 ]; then
     echo "Compilation failed!"
     exit 1
