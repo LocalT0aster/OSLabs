@@ -14,7 +14,7 @@
 
 #define MAX_FRAMES 256
 #define PAGE_SIZE 8
-#define PAGETABLE_PATH "/ex2_pagetable"
+#define PAGETABLE_PATH "./ex2_pagetable"
 
 typedef struct {
     int valid;

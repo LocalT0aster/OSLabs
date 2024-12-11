@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo mkdir -p /tmp/ex2 && sudo rm -f /tmp/ex2/pagetable || true
+mkdir -p ./tmp/ex2 && rm -f ./tmp/ex2/pagetable || true
 # Compile the mmu and pager programs
 gcc mmu.c -o mmu.out -Wall
 gcc pager.c -o pager.out -Wall

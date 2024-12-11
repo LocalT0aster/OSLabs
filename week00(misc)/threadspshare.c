@@ -4,6 +4,7 @@
 #include <semaphore.h>
 #include <sys/mman.h>
 #include <unistd.h>
+#include <errno.h>
 
 sem_t *semaphore;
 
@@ -31,8 +32,9 @@ int main() {
 
     pid_t pid = fork();
     if (pid == -1) {
-        perror("fork");
-        exit(1);
+        errno = 10;
+        perror("Fork failed");
+        exit(10);
     }
 
     if (pid == 0) { // Child process

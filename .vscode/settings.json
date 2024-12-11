@@ -10,6 +10,7 @@
         "errno-base.h": "c",
         "string.h": "c",
         "features.h": "c",
-        "float.h": "c"
+        "float.h": "c",
+        "error.h": "c"
     }
 }

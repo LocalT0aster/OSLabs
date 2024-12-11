@@ -81,7 +81,7 @@ int main() {
         }
     }
     // Close the file before exiting
-    free(keys); // Free keys :O
+    free(keys); // Free keys :D
     close(keyboardFD);
     return EXIT_SUCCESS;
 }

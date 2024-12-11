@@ -10,7 +10,7 @@
 #include <unistd.h>
 
 #define PAGE_TABLE_SIZE 256 // Assuming a maximum of 256 pages
-#define PAGETABLE_PATH "/ex2_pagetable"
+#define PAGETABLE_PATH "./ex2_pagetable"
 
 typedef struct {
     int valid;
